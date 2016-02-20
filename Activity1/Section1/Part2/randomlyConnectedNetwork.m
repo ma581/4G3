@@ -14,7 +14,7 @@ I = 1;
 % ***********************************% ***********************************
 % Setup Connections
 % ***********************************% ***********************************
-g = 2;
+g = 0.9;
 
 % Symmetric matrix
 % w1 = normrnd(0,g/sqrt(N), [N 1]); % The diagonal values
@@ -52,7 +52,7 @@ end
 j = 1; %temp variable
 r_ = zeros(N,20); %will hold all neurons response at a given time
 R = zeros(N,20); %will hold firing rate over time
-for time = 0:0.1:2
+for time = 0:10:500
     for i = 1:N
         r_(:,i) = eval(subs(C{i},time))*V(:,i);
     end
@@ -61,7 +61,7 @@ for time = 0:0.1:2
 end
 
 % Plotting
-time = [0:0.1:2];
+time = [0:10:500];
 figure;
 legendInfo2 = cell(N,1);
 for i = 1:N
@@ -80,7 +80,7 @@ grid on;
 
 %% 2a(ii) Argand
 figure;
-p = plot(lamda_nu,'x')
+p = plot(lamda_nu,'x');
 set(p,'LineWidth',2);
 % for i = 1:N
 %     p = plot(lamda_nu(i),'x');
@@ -104,35 +104,48 @@ grid on;
 % Calculating firing rates at infiinity
 % ***********************************
 
-j = 1; %temp variable
-r_ = zeros(N,20); %will hold all neurons response at a given time
-R_final = zeros(N,20); %will hold firing rate over time
-for time = 5000:0.1:5002
-    for i = 1:N
-        r_(:,i) = eval(subs(C{i},time))*V(:,i);
-    end
-    R_final(:,j) = sum(r_,2); 
-    j = j + 1;
-end
+% j = 1; %temp variable
+% r_ = zeros(N,20); %will hold all neurons response at a given time
+% R_final = zeros(N,20); %will hold firing rate over time
+% for time = 5000:0.1:5002
+%     for i = 1:N
+%         r_(:,i) = eval(subs(C{i},time))*V(:,i);
+%     end
+%     R_final(:,j) = sum(r_,2); 
+%     j = j + 1;
+% end
+% 
+% % Plotting
+% time = 5000:0.1:5002;
+% figure;
+% legendInfo2 = cell(N,1);
+% for i = 1:N
+%     p = plot(time,R_final(i,:));
+%     legendInfo2{i} = ['r' num2str(i)];
+%     hold on;
+%     set(p,'LineWidth',2);
+% end
+% xlabel('Time (s)');
+% ylabel('Firing Rate (s^{-1})');
+% title('Firing Rates');
+% legend(legendInfo2);
+% grid on;    
+% 
+% final_values(:,1) = R_final(:,j-1);
+% r_at_t10 = zeros(N,1);
 
-% Plotting
-time = 5000:0.1:5002;
-figure;
-legendInfo2 = cell(N,1);
+
+% ***********************************
+% Calculating firing rates at infiinity
+% ***********************************
+r_rates = zeros(N,N);
+c_0 = 0; % Boundary condition assuming zero
 for i = 1:N
-    p = plot(time,R_final(i,:));
-    legendInfo2{i} = ['r' num2str(i)];
-    hold on;
-    set(p,'LineWidth',2);
+    g_nu = V(:,i)'*(F*I);
+    temp_const = g_nu/(1 - lamda_nu(i));
+    r_rates(:,i) = temp_const*V(:,i);
 end
-xlabel('Time (s)');
-ylabel('Firing Rate (s^{-1})');
-title('Firing Rates');
-legend(legendInfo2);
-grid on;    
-
-final_values(:,1) = R_final(:,j-1);
-r_at_t10 = zeros(N,1);
+r_inf = sum(r_rates,2);
 
 % ***********************************
 % Calculating firing rates at r(t=10)
@@ -145,7 +158,7 @@ time = 10;
 r_at_t10(:,1) = sum(r_,2); 
 
 figure;
-p = plot(real(final_values),r_at_t10,'x' );
+p = plot(real(r_inf),r_at_t10,'x' );
 set(p,'LineWidth',2);
 xlabel('r_{inf} (s^{-1})');
 ylabel('r(t=10) (s^{-1})');
