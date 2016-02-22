@@ -8,7 +8,7 @@ r_x = 10;
 T = 2;
 %% Single LIF
 load('S');
-w = 1; % w = 4.30 for firing rate of 10Hz
+w = 1.4; % w = 1.4 for firing rate of 10Hz
 
 S_output = zeros(1,T/dt);
 V_output = zeros(1,T/dt);
@@ -62,3 +62,7 @@ var_pred = (tau/2)*(((w/(K*dt))^2)*s - (w*r_x)^2);
 %% Fano factor
 window = 100*10^-3;
 FanoFactor = CalculateFano(S_output,window,dt);
+
+
+%% (b) Firing rate of 10
+firing_rate = sum(S_output); %w = 1.4; Fano = 0.9686

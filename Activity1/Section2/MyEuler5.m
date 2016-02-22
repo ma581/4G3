@@ -6,10 +6,10 @@ function [V_future,S_output ] = MyEuler5(V_current, tau, w, S, V_th, dt, K)
     
     S_output = 0;
     
-%     if (V_future>V_th)
-%         S_output = 1;
-%         V_future = 0;
-%     end
+    if (V_future>V_th)
+        S_output = 1;
+        V_future = 0;
+    end
     
     
 end
